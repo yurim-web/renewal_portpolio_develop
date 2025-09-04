@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>세준 · Portfolio</title>
+  <meta name="description" content="프론트엔드 포트폴리오 · HTML/CSS/JS v1" />
+  <meta name="color-scheme" content="light dark" />
+  <style>
+    /* =====================
+       CSS Base & Variables
+       ===================== */
+    :root {
+      --bg: #0b0d12;
+      --text: #e6e6e6;
+      --muted: #a7a7a7;
+      --card: #121521;
+      --accent: #7c9cff; /* 살짝 blue-violet */
+      --accent-2: #8ef6d1; /* 포인트 */
+      --border: #1d2233;
+      --maxw: 1100px;
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+    }
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #f7f8fb;
+        --text: #1a1c23;
+        --muted: #5a6072;
+        --card: #ffffff;
+        --border: #e6e8ef;
+        --shadow: 0 10px 30px rgba(0,0,0,.08);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans KR, Apple SD Gothic Neo, sans-serif;
+      background: linear-gradient(180deg, var(--bg), #0b0d12), var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    /* Layout */
+    .container { width: min(100%, var(--maxw)); margin: 0 auto; padding: 0 20px; }
+    section { padding: 80px 0; }
+
+    /* Header / Nav */
+    .skip-link { position: absolute; left: -9999px; top: auto; width: 1px; height: 1px; overflow: hidden; }
+    .skip-link:focus { position: fixed; left: 20px; top: 20px; width: auto; height: auto; padding: 8px 12px; background: var(--accent); color: #000; z-index: 1000; border-radius: 8px; }
+
+    header {
+      position: sticky; top: 0; z-index: 100;
+      backdrop-filter: saturate(140%) blur(8px);
+      background: color-mix(in oklab, var(--bg) 80%, transparent);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { font-weight: 700; letter-spacing: .3px; }
+    .brand .dot { color: var(--accent); }
+
+    .nav-links { display: flex; gap: 22px; align-items: center; }
+    .nav-links a { color: var(--muted); font-weight: 600; }
+    .nav-links a:hover, .nav-links a[aria-current="page"] { color: var(--text); }
+
+    .hamburger { display: none; width: 40px; height: 40px; border: 1px solid var(--border); background: var(--card); border-radius: 10px; align-items: center; justify-content: center; }
+    .hamburger span { width: 18px; height: 2px; background: var(--text); position: relative; display: block; }
+    .hamburger span::before, .hamburger span::after { content: ""; position: absolute; left: 0; width: 100%; height: 2px; background: var(--text); }
+    .hamburger span::before { top: -6px; }
+    .hamburger span::after { top: 6px; }
+
+    @media (max-width: 820px) {
+      .hamburger { display: inline-flex; }
+      .nav-links { position: fixed; inset: 64px 0 auto 0; background: var(--card); border-bottom: 1px solid var(--border); padding: 12px 20px; display: none; }
+      .nav-links.open { display: grid; gap: 10px; }
+    }
+
+    /* Hero */
+    .hero { display: grid; grid-template-columns: 1.2fr .8fr; gap: 32px; align-items: center; min-height: clamp(60vh, 78vh, 88vh); }
+    .badge { display: inline-flex; align-items: center; gap: 8px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 999px; background: color-mix(in oklab, var(--card) 70%, transparent); font-size: 14px; color: var(--muted); }
+    .title { font-size: clamp(32px, 5vw, 52px); line-height: 1.15; margin: 14px 0 10px; font-weight: 800; letter-spacing: -0.02em; }
+    .lead { color: var(--muted); font-size: clamp(16px, 1.6vw, 18px); }
+    .cta { margin-top: 22px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn { padding: 12px 16px; border-radius: 12px; border: 1px solid var(--border); font-weight: 700; }
+    .btn.primary { background: linear-gradient(180deg, var(--accent), #5f7cff); color: #06070b; border: none; box-shadow: var(--shadow); }
+    .btn.ghost { background: var(--card); }
+
+    .hero-card { background: radial-gradient(1200px 600px at 80% -50%, color-mix(in oklab, var(--accent) 20%, transparent), transparent), var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; box-shadow: var(--shadow); }
+    .hero-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+    .hcell { background: color-mix(in oklab, var(--card) 90%, transparent); border: 1px solid var(--border); border-radius: 12px; padding: 16px; }
+
+    /* Section Head */
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+    .section-head h2 { margin: 0; font-size: clamp(22px, 3vw, 32px); }
+    .muted { color: var(--muted); }
+
+    /* About */
+    .about { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow); }
+    .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .tag { padding: 6px 10px; background: color-mix(in oklab, var(--accent-2) 18%, transparent); color: color-mix(in oklab, var(--accent-2) 75%, var(--text)); border: 1px dashed color-mix(in oklab, var(--accent-2) 45%, var(--border)); border-radius: 999px; font-size: 13px; }
+
+    /* Projects */
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .project { display: grid; gap: 10px; }
+    .thumb { aspect-ratio: 16/10; background: linear-gradient(180deg, #1c2133, #0d1222); border: 1px solid var(--border); border-radius: 12px; }
+    .p-title { font-weight: 700; }
+    .p-meta { color: var(--muted); font-size: 14px; }
+
+    /* Contact */
+    form { display: grid; gap: 12px; }
+    label { font-weight: 600; font-size: 14px; }
+    input, textarea { width: 100%; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--border); background: var(--card); color: var(--text); }
+    textarea { min-height: 120px; resize: vertical; }
+
+    footer { padding: 40px 0; color: var(--muted); border-top: 1px solid var(--border); }
+
+    @media (max-width: 1024px) {
+      .hero { grid-template-columns: 1fr; }
+      .about { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .grid { grid-template-columns: 1fr; }
+    }
+
+    /* ===============
+       Reveal Animation
+       =============== */
+    .reveal { opacity: 0; transform: translateY(14px); transition: opacity .6s ease-out, transform .6s ease-out; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .reveal { opacity: 1 !important; transform: none !important; }
+      .btn, .hcell, .card, .thumb { transition: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">본문 바로가기</a>
+
+  <!-- ======= Header / Nav ======= -->
+  <header>
+    <div class="container nav">
+      <div class="brand" aria-label="홈으로">
+        세준<span class="dot">.</span>
+      </div>
+      <nav>
+        <button class="hamburger" aria-expanded="false" aria-controls="nav-menu" aria-label="메뉴 열기"><span></span></button>
+        <div class="nav-links" id="nav-menu">
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#contact">Contact</a>
+          <a href="#" class="btn ghost" style="padding:8px 12px">Resume</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- ======= Hero ======= -->
+    <section class="container hero">
+      <div>
+        <span class="badge reveal">Front-End Developer · HTML/CSS/JS</span>
+        <h1 class="title reveal" style="transition-delay:.06s">사용자 경험을 설계하고,<br/> 구현으로 증명합니다.</h1>
+        <p class="lead reveal" style="transition-delay:.12s">시맨틱 마크업과 접근성을 기반으로,
+          반응형 UI와 자연스러운 인터랙션을 만듭니다. 지금은 포트폴리오 v1(정적) 단계이며,
+          곧 React · Next.js로 확장할 예정입니다.</p>
+        <div class="cta reveal" style="transition-delay:.18s">
+          <a class="btn primary" href="#projects">프로젝트 보기</a>
+          <a class="btn ghost" href="#contact">연락하기</a>
+        </div>
+      </div>
+
+      <div class="hero-card reveal" style="transition-delay:.12s">
+        <div class="hero-grid">
+          <div class="hcell">
+            <strong>핵심 역량</strong>
+            <div class="muted">Semantic · Responsive · A11y</div>
+          </div>
+          <div class="hcell">
+            <strong>UI 패턴</strong>
+            <div class="muted">Grid · Card · Motion</div>
+          </div>
+          <div class="hcell">
+            <strong>툴체인</strong>
+            <div class="muted">Git/GitHub · Vite(선택)</div>
+          </div>
+          <div class="hcell">
+            <strong>Next 단계</strong>
+            <div class="muted">Next.js + Tailwind + FM</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======= About ======= -->
+    <section id="about" class="container">
+      <div class="section-head">
+        <h2 class="reveal">About</h2>
+        <p class="muted reveal" style="transition-delay:.06s">시맨틱, 반응형, 성능, 접근성</p>
+      </div>
+      <div class="about">
+        <article class="card reveal">
+          <h3>소개</h3>
+          <p class="muted">프론트엔드 개발자가 되기 위한 기초 역량을 탄탄히 다지고 있습니다. HTML/CSS/JS로 정적 1판을 제작하고, 이후 React/Next.js로 단계적 확장을 계획합니다.</p>
+          <div class="tags">
+            <span class="tag">HTML5</span>
+            <span class="tag">CSS3</span>
+            <span class="tag">JavaScript(ES6+)</span>
+            <span class="tag">Responsive</span>
+            <span class="tag">Accessibility</span>
+          </div>
+        </article>
+        <aside class="card reveal" style="transition-delay:.06s">
+          <h3>하이라이트</h3>
+          <ul class="muted" style="margin:0; padding-left:18px;">
+            <li>시맨틱 구조: header/main/section/footer</li>
+            <li>모바일 우선, Grid/Flex 레이아웃</li>
+            <li>IntersectionObserver로 섹션 등장 모션</li>
+            <li>prefers-reduced-motion 대응</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <!-- ======= Projects ======= -->
+    <section id="projects" class="container">
+      <div class="section-head">
+        <h2 class="reveal">Projects</h2>
+        <p class="muted reveal" style="transition-delay:.06s">샘플 카드 3개 · 썸네일/태그/링크</p>
+      </div>
+      <div class="grid">
+        <article class="card project reveal">
+          <div class="thumb" aria-hidden="true"></div>
+          <div class="p-title">Responsive Layout Showcase</div>
+          <div class="p-meta">HTML/CSS · Grid/Flex</div>
+          <a class="btn ghost" href="#" aria-label="프로젝트 상세 보기">보기</a>
+        </article>
+        <article class="card project reveal" style="transition-delay:.06s">
+          <div class="thumb" aria-hidden="true"></div>
+          <div class="p-title">Interactive Components</div>
+          <div class="p-meta">JavaScript · Tabs/Accordion</div>
+          <a class="btn ghost" href="#" aria-label="프로젝트 상세 보기">보기</a>
+        </article>
+        <article class="card project reveal" style="transition-delay:.12s">
+          <div class="thumb" aria-hidden="true"></div>
+          <div class="p-title">Motion & A11y</div>
+          <div class="p-meta">Transition · prefers-reduced-motion</div>
+          <a class="btn ghost" href="#" aria-label="프로젝트 상세 보기">보기</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- ======= Contact ======= -->
+    <section id="contact" class="container">
+      <div class="section-head">
+        <h2 class="reveal">Contact</h2>
+        <p class="muted reveal" style="transition-delay:.06s">간단한 메시지를 보내주세요</p>
+      </div>
+      <div class="card reveal">
+        <form id="contactForm" novalidate>
+          <div>
+            <label for="name">이름</label>
+            <input id="name" name="name" type="text" placeholder="홍길동" required />
+          </div>
+          <div>
+            <label for="email">이메일</label>
+            <input id="email" name="email" type="email" placeholder="you@example.com" required />
+          </div>
+          <div>
+            <label for="message">메시지</label>
+            <textarea id="message" name="message" placeholder="안녕하세요…" required></textarea>
+          </div>
+          <button class="btn primary" type="submit">보내기</button>
+          <p id="formStatus" class="muted" role="status" aria-live="polite" style="margin:6px 0 0"></p>
+        </form>
+        <!-- TODO: 실제 전송은 Next.js 단계에서 API route 연결 권장
+             임시로 mailto 링크를 사용할 수도 있습니다. -->
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">© <span id="y"></span> Sejoon. All rights reserved.</div>
+  </footer>
+
+  <script>
+    // =====================
+    // Mobile Nav Toggle
+    // =====================
+    const btn = document.querySelector('.hamburger');
+    const menu = document.getElementById('nav-menu');
+    btn?.addEventListener('click', () => {
+      const open = menu.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+
+    // =====================
+    // Intersection Reveal
+    // =====================
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!prefersReduced && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('show');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+    } else {
+      document.querySelectorAll('.reveal').forEach(el => el.classList.add('show'));
+    }
+
+    // =====================
+    // Contact Form (demo)
+    // =====================
+    const form = document.getElementById('contactForm');
+    const statusEl = document.getElementById('formStatus');
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form));
+
+      // 간단한 클라이언트 검증
+      if (!data.name || !data.email || !data.message) {
+        statusEl.textContent = '모든 필드를 채워주세요.';
+        return;
+      }
+
+      // 정적 v1에서는 실제 전송 대신 콘솔 출력
+      console.log('Form data:', data);
+      statusEl.textContent = '메시지를 확인했습니다! (v1 데모)';
+      form.reset();
+    });
+
+    // Year
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
